@@ -9,16 +9,13 @@ const {
   postSerializer,
   postCollectionSerializer
 } = require('../serializers/post.serializer');
-const { response } = require('express');
 
 exports.listPost = async (req, res, next) => {
   try {
     const resPerPage = 10
 
     // optional query params
-    const {
-      page = 1
-    } = req.query
+    const { page = 1 } = req.query
 
     // geting post list ( with optional params ) and calculate the number of that list
     const numberOfSkipDocs = (resPerPage * page) - resPerPage
@@ -32,9 +29,7 @@ exports.listPost = async (req, res, next) => {
     // formating response data
     const formatedData = {
       posts: postCollectionSerializer(posts),
-      meta: {
-        totalPost
-      }
+      meta: {totalPost}
     }
     return responseSuccess( res, formatedData)
   } catch (error) {
@@ -44,20 +39,19 @@ exports.listPost = async (req, res, next) => {
 
 exports.createPost = async (req, res, next) => {
   try {
-    // create new post
-    const post = new Post(req.body);
-    const savedPost = await post.save();
+    const post = new Post(req.body)
+    const savedPost = await post.save()
 
     // handle error
     if (!savedPost) {
-    return responseError(res, 422)
+      return responseError(res, 422)
     }
 
     // formating response data
     const formatedData = {
       post: postSerializer(savedPost)
     }
-    return responseSuccess(res. formatedData)
+    return responseSuccess(res, formatedData)
   } catch (error) {
     return responseError(res, 422)
   }
@@ -65,7 +59,7 @@ exports.createPost = async (req, res, next) => {
 
 exports.showPost = async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.id)
     const formatedData = {
       post: postSerializer(post)
     }
